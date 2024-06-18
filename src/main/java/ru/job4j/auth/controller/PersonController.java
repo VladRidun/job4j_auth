@@ -1,7 +1,7 @@
-package job4j_auth.auth.controller;
+package ru.job4j.auth.controller;
 
-import job4j_auth.auth.domain.Person;
-import job4j_auth.auth.repository.PersonRepository;
+import ru.job4j.auth.domain.Person;
+import ru.job4j.auth.repository.PersonRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -39,13 +39,13 @@ public class PersonController {
     }
 
     @PutMapping("/")
-    public ResponseEntity<Void> update(@RequestBody Person person){
+    public ResponseEntity<Void> update(@RequestBody Person person) {
         this.persons.save(person);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable int id){
+    public ResponseEntity<Void> delete(@PathVariable int id) {
         Person person = new Person();
         person.setId(id);
         this.persons.delete(person);

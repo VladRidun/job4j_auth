@@ -1,6 +1,6 @@
-package job4j_auth.auth.repository;
+package ru.job4j.auth.repository;
 
-import job4j_auth.auth.domain.Person;
+import ru.job4j.auth.domain.Person;
 import org.springframework.data.repository.CrudRepository;
 
 public interface PersonRepository extends CrudRepository<Person, Integer> {

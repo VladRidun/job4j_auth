@@ -1,4 +1,4 @@
-package job4j_auth.auth;
+package ru.job4j.auth;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

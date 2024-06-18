@@ -1,4 +1,4 @@
-package job4j_auth.auth.domain;
+package ru.job4j.auth.domain;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
