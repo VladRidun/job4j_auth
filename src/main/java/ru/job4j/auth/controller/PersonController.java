@@ -1,6 +1,5 @@
 package ru.job4j.auth.controller;
 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import ru.job4j.auth.domain.Person;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
