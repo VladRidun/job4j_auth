@@ -14,7 +14,7 @@ import java.util.List;
 public class PersonController {
     private final SimplePersonService personService;
 
-    public PersonController(SimplePersonService personService, BCryptPasswordEncoder encoder) {
+    public PersonController(SimplePersonService personService) {
         this.personService = personService;
 
     }
@@ -34,7 +34,7 @@ public class PersonController {
     @GetMapping("/{id}")
     public ResponseEntity<Person> findById(@PathVariable int id) {
         var person = this.personService.findById(id);
-        return new ResponseEntity<Person>(
+        return new ResponseEntity<>(
                 person.orElse(new Person()),
                 person.isPresent() ? HttpStatus.OK : HttpStatus.NOT_FOUND);
     }
