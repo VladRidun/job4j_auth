@@ -13,11 +13,10 @@ import java.util.List;
 @RequestMapping("/person")
 public class PersonController {
     private final SimplePersonService personService;
-    private final BCryptPasswordEncoder encoder;
 
     public PersonController(SimplePersonService personService, BCryptPasswordEncoder encoder) {
         this.personService = personService;
-        this.encoder = encoder;
+
     }
 
     @PostMapping("/sign-up")
