@@ -13,6 +13,7 @@ import ru.job4j.auth.service.SimplePersonService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -37,7 +38,7 @@ public class PersonController {
     }
 
     @PostMapping("/sign-up")
-    public ResponseEntity<Person> signUp(@RequestBody Person person) {
+    public ResponseEntity<Person> signUp(@Valid @RequestBody Person person) {
         validPerson(person);
         validPassword(person);
         return this.personService.save(person)
@@ -63,7 +64,7 @@ public class PersonController {
     }
 
     @PutMapping("/")
-    public ResponseEntity<Person> update(@RequestBody Person person) {
+    public ResponseEntity<Person> update(@Valid @RequestBody Person person) {
         validPerson(person);
         validPassword(person);
         if (this.personService.update(person)) {
@@ -96,7 +97,7 @@ public class PersonController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<Person> patch(@PathVariable Integer id,
-                                        @RequestBody PersonPassDto personPassDto) {
+                                        @Valid @RequestBody PersonPassDto personPassDto) {
         return personService.patch(id, personPassDto)
                 .map(result -> ResponseEntity.ok().body(result))
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
