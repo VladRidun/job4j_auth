@@ -8,7 +8,9 @@ import ru.job4j.auth.domain.Person;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.job4j.auth.dto.PersonPassDto;
 import ru.job4j.auth.service.SimplePersonService;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -46,18 +48,18 @@ public class PersonController {
     @GetMapping("/all")
     public ResponseEntity<List<Person>> findAll() {
         return ResponseEntity.status(HttpStatus.OK)
-                .header("Job4jCustomHeader", "job4j")
+                .header("Job4jVladHeader", "job4j")
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(personService.findAll());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Person> findById(@PathVariable int id) {
-       return this.personService.findById(id)
-               .map(p -> new ResponseEntity<>(p, HttpStatus.OK))
-               .orElseThrow(() -> new ResponseStatusException(
-                       HttpStatus.NOT_FOUND, "Пользователь с указанным id не найден!"
-               ));
+        return this.personService.findById(id)
+                .map(p -> new ResponseEntity<>(p, HttpStatus.OK))
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Пользователь с указанным id не найден!"
+                ));
     }
 
     @PutMapping("/")
@@ -65,9 +67,9 @@ public class PersonController {
         validPerson(person);
         validPassword(person);
         if (this.personService.update(person)) {
-            return  ResponseEntity.ok().build();
+            return ResponseEntity.ok().build();
         }
-        return  ResponseEntity.notFound().build();
+        return ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("/{id}")
@@ -75,9 +77,9 @@ public class PersonController {
         Person person = new Person();
         person.setId(id);
         if (this.personService.delete(person)) {
-            return  ResponseEntity.ok().build();
+            return ResponseEntity.ok().build();
         }
-        return  ResponseEntity.notFound().build();
+        return ResponseEntity.notFound().build();
     }
 
     @ExceptionHandler(value = {IllegalArgumentException.class})
@@ -90,5 +92,13 @@ public class PersonController {
             put("message", e.getMessage());
             put("type", e.getClass());
         }}));
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<Person> patch(@PathVariable Integer id,
+                                        @RequestBody PersonPassDto personPassDto) {
+        return personService.patch(id, personPassDto)
+                .map(result -> ResponseEntity.ok().body(result))
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 }

@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.job4j.auth.domain.Person;
+import ru.job4j.auth.dto.PersonPassDto;
 import ru.job4j.auth.repository.PersonRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,5 +67,14 @@ public class SimplePersonService implements PersonService, UserDetailsService {
             throw new UsernameNotFoundException(username);
         }
         return new User(person.getLogin(), person.getPassword(), emptyList());
+    }
+
+    public Optional<Person> patch(Integer id, PersonPassDto personPassDto) {
+        return persons.findById(id)
+                .map(p -> {
+                    p.setPassword(encoder.encode(personPassDto.getPassword()));
+                    return p;
+                })
+                .map(persons::save);
     }
 }
