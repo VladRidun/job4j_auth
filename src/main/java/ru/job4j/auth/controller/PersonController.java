@@ -2,6 +2,7 @@ package ru.job4j.auth.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.web.server.ResponseStatusException;
 import ru.job4j.auth.domain.Person;
 import org.springframework.http.HttpStatus;
@@ -38,19 +39,22 @@ public class PersonController {
         validPerson(person);
         validPassword(person);
         return this.personService.save(person)
-                .map(ResponseEntity::ok)
+                .map(p -> new ResponseEntity<>(p, HttpStatus.OK))
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.CONFLICT).build());
     }
 
     @GetMapping("/all")
-    public List<Person> findAll() {
-        return this.personService.findAll();
+    public ResponseEntity<List<Person>> findAll() {
+        return ResponseEntity.status(HttpStatus.OK)
+                .header("Job4jCustomHeader", "job4j")
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(personService.findAll());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Person> findById(@PathVariable int id) {
        return this.personService.findById(id)
-               .map(ResponseEntity::ok)
+               .map(p -> new ResponseEntity<>(p, HttpStatus.OK))
                .orElseThrow(() -> new ResponseStatusException(
                        HttpStatus.NOT_FOUND, "Пользователь с указанным id не найден!"
                ));
