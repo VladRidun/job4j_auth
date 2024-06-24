@@ -1,5 +1,6 @@
 package ru.job4j.auth.controller;
 
+import lombok.AllArgsConstructor;
 import ru.job4j.auth.domain.Person;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,13 +11,9 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/person")
+@AllArgsConstructor
 public class PersonController {
     private final SimplePersonService personService;
-
-    public PersonController(SimplePersonService personService) {
-        this.personService = personService;
-
-    }
 
     @PostMapping("/sign-up")
     public ResponseEntity<Person> signUp(@RequestBody Person person) {
@@ -32,21 +29,24 @@ public class PersonController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Person> findById(@PathVariable int id) {
-        var person = this.personService.findById(id);
-        return new ResponseEntity<>(
-                person.orElse(new Person()),
-                person.isPresent() ? HttpStatus.OK : HttpStatus.NOT_FOUND);
+       return this.personService.findById(id).map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PutMapping("/")
-    public ResponseEntity<Void> update(@RequestBody Person person) {
-        return this.personService.update(person) ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
+    public ResponseEntity<Person> update(@RequestBody Person person) {
+        if (this.personService.update(person)) {
+            return  ResponseEntity.ok().build();
+        }
+        return  ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable int id) {
         Person person = new Person();
         person.setId(id);
-        return this.personService.delete(person) ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
+        if (this.personService.delete(person)) {
+            return  ResponseEntity.ok().build();
+        }
+        return  ResponseEntity.notFound().build();
     }
 }
